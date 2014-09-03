@@ -14,6 +14,7 @@ public class Parser {
 		int n = 0;
 		int k = 0;
 		int matrixRowCount = 9999;
+		boolean propertiesRead = false;
 		
 		ArrayList<boolean[][]> generationMatrixList = new ArrayList<boolean[][]>(); 
 		try{
@@ -23,39 +24,50 @@ public class Parser {
 			
 			while((input=br.readLine())!=null){
 				
-				//stop reading
-				if (testCases == testCasesRead && matrixRowCount == n)  break; 
+				 
 				
 				String[] inputLine = input.split(" ");
-						
-				switch (inputLine.length) {
-				// first row with test case number
-				case 1:
-					testCases = Integer.parseInt(inputLine[0]);
-					testCasesRead = 0;
-					break;
-				// row with 'n' and 'k'
-				case 2:
-					matrixRowCount=0;
-					n =  Integer.parseInt(inputLine[0]);
-					k =  Integer.parseInt(inputLine[1]);
-					generationMatrixList.add(testCasesRead, new boolean[n][k]);
-					break;
-				// row with k element, is a row of generation matrix
-				default:
-					boolean[][] generationMatrix = (boolean[][]) generationMatrixList.get(testCasesRead);
 				
+				if(!propertiesRead){
+					switch (inputLine.length) {
+					// first row with test case number
+					case 1:
+						testCases = Integer.parseInt(inputLine[0]);
+						testCasesRead = 0;
+						break;
+					// row with 'n' and 'k'
+					case 2:
+						matrixRowCount=0;
+						propertiesRead = true;
+						n =  Integer.parseInt(inputLine[0]);
+						k =  Integer.parseInt(inputLine[1]);
+						generationMatrixList.add(testCasesRead, new boolean[n][k]);
+						break;
+					
+					default:
+						
+							
+						break;
+					}
+				}else {
+					// row with k element, is a row of generation matrix
+					boolean[][] generationMatrix = (boolean[][]) generationMatrixList.get(testCasesRead);
+					
 					for (int i = 0; i < inputLine.length; i++) {
 						generationMatrix[matrixRowCount][i] = (inputLine[i].equalsIgnoreCase("1")) ? true : false;
 					}
 					matrixRowCount++;
 					
-					if(matrixRowCount == n) testCasesRead++;
-						
-					break;
-				}
-						
-			}
+					if(matrixRowCount == n) {
+						testCasesRead++;
+						propertiesRead = false;
+						}
+					}
+				
+				//stop reading
+				if (testCases == testCasesRead && matrixRowCount == n)  break;
+			}		
+			
 		
 		}catch(IOException io){
 			io.printStackTrace();

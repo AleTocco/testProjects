@@ -10,7 +10,7 @@ import com.king.jobtest.codes.UnencodedStringBuilder;
 public class UnencodedStringBuilderTest {
 	
 	@Test
-	public void createEncodedStringsTest(){
+	public void createUnencodedStringsTest(){
 		
 		UnencodedStringBuilder usb = new UnencodedStringBuilder();
 		int kLenght = 2;

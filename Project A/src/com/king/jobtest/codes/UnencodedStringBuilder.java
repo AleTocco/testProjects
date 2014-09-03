@@ -15,12 +15,11 @@ public class UnencodedStringBuilder {
 	            int val = list.length * j + i;
 	            int ret = (1 & (val >>> j));
 	            list[i][j] = ret !=0;
-	            System.out.print(list[i][j] + "\t");
+	            
 	        }
-	        System.out.println();
+	       
 	    }
 
-	    
 		return list;
 	}
 

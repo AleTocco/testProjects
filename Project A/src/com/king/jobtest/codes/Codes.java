@@ -9,20 +9,10 @@ public class Codes {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		UnencodedStringBuilder usb = new UnencodedStringBuilder();
-		/*
-		boolean[][] unencodedList = usb.createUnencodedStrings(4);		
-		boolean[][] generationMatrix = {{true, false, false, false}, 
-											{false, true, false, false},
-											{false, false, true, false},
-											{false, false, false, true},
-											{false, true, true, true},
-											{true, false, true, true},
-											{true, true, false, true}};
-		*/
 		Parser parser = new Parser();
+		Codifier codifier = new Codifier();
 		
 		ArrayList<boolean[][]> generationMatrixList = parser.parseInput();
 		
@@ -37,42 +27,25 @@ public class Codes {
 			
 			for (int i = 0; i < unencodedWords.length; i++) {
 				// consider all non-zero unencoded words
-				if(isNonZerocode(unencodedWords[i])){
-					encodedList.add((new Codifier()).codify(generationMatrix, unencodedWords[i]));
-			
+				if(codifier.isNonZerocode(unencodedWords[i])){
+					encodedList.add(codifier.codify(generationMatrix, unencodedWords[i]));
+			 
 				}
 			}
 			
 			int minimumDistance=99999;
 			for (Iterator<boolean[]> iterator = encodedList.iterator(); iterator.hasNext();) {
 				
-				int distance = calculateMinimumDistance((boolean[]) iterator.next());
+				int distance = codifier.calculateMinimumDistance((boolean[]) iterator.next());
 				
 				if(distance<minimumDistance) minimumDistance=distance;
 			}
 			
-			System.out.print("\nmin dinstance = "+ minimumDistance);
+			System.out.print("\n"+ minimumDistance + "\n");
 		}
 		
 		
 	}
 
-	private static int calculateMinimumDistance(boolean[] encoded){
-		int count = 0;
 
-		for (int i = 0; i < encoded.length; i++) {
-			if(encoded[i]) count++;
-		}
-		return count;
-
-		
-	}
-	
-	private static boolean isNonZerocode(boolean[] encoded){
-		
-		for (int i = 0; i < encoded.length; i++) {
-			if(encoded[i] == true) return true;
-		}
-		return false;
-	}
 }
