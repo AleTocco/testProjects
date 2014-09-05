@@ -3,7 +3,7 @@ package com.king.jobtest.codes;
 
 public class UnencodedStringBuilder {
 
-	public boolean[][] createUnencodedStrings(int kLenght) {
+	public boolean[][] createAllPossibleUnencodedWords(int kLenght) {
 		
 	    int numRows = (int)Math.pow(2, kLenght);
 	   

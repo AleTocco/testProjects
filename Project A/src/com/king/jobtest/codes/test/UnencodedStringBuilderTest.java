@@ -14,7 +14,7 @@ public class UnencodedStringBuilderTest {
 		
 		UnencodedStringBuilder usb = new UnencodedStringBuilder();
 		int kLenght = 2;
-		boolean[][] list = usb.createUnencodedStrings(kLenght);
+		boolean[][] list = usb.createAllPossibleUnencodedWords(kLenght);
 		double numberOfCases = Math.pow(2, kLenght);
 		assertEquals((int) numberOfCases, list.length);
 		

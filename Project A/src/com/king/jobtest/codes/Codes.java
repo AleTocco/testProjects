@@ -21,30 +21,40 @@ public class Codes {
 			boolean[][] generationMatrix = (boolean[][]) iteratorGenMatrixList.next();
 			
 			// create a list of all possible 'k' dimension unencoded words
-			boolean[][] unencodedWords = usb.createUnencodedStrings(generationMatrix[0].length);		
+			boolean[][] unencodedWordsList = usb.createAllPossibleUnencodedWords(generationMatrix[0].length);		
 						
-			ArrayList<boolean[]> encodedList = new ArrayList<boolean[]>();
+			ArrayList<boolean[]> encodedWordsList = createEncodedWords(codifier, generationMatrix, unencodedWordsList);
+					
+			int minimumDistance = getMinimumDistance(codifier, encodedWordsList);
 			
-			for (int i = 0; i < unencodedWords.length; i++) {
-				// consider all non-zero unencoded words
-				if(codifier.isNonZerocode(unencodedWords[i])){
-					encodedList.add(codifier.codify(generationMatrix, unencodedWords[i]));
-			 
-				}
-			}
-			
-			int minimumDistance=99999;
-			for (Iterator<boolean[]> iterator = encodedList.iterator(); iterator.hasNext();) {
-				
-				int distance = codifier.calculateMinimumDistance((boolean[]) iterator.next());
-				
-				if(distance<minimumDistance) minimumDistance=distance;
-			}
-			
-			System.out.print("\n"+ minimumDistance + "\n");
+			System.out.print("\n"+ minimumDistance);
 		}
 		
 		
+	}
+
+	private static ArrayList<boolean[]> createEncodedWords(Codifier codifier, boolean[][] generationMatrix, boolean[][] unencodedWordsList) {
+		ArrayList<boolean[]> encodedWordsList = new ArrayList<boolean[]>();
+		
+		for (int i = 0; i < unencodedWordsList.length; i++) {
+			// consider all non-zero unencoded words
+			if(codifier.isNonZerocode(unencodedWordsList[i])){
+				encodedWordsList.add(codifier.codify(generationMatrix, unencodedWordsList[i]));
+		 
+			}
+		}
+		return encodedWordsList;
+	}
+
+	private static int getMinimumDistance(Codifier codifier, ArrayList<boolean[]> encodedWordsList) {
+		int minimumDistance=99999;
+		for (Iterator<boolean[]> iterator = encodedWordsList.iterator(); iterator.hasNext();) {
+			
+			int distance = codifier.calculateMinimumDistance((boolean[]) iterator.next());
+			
+			if(distance<minimumDistance) minimumDistance=distance;
+		}
+		return minimumDistance;
 	}
 
 
