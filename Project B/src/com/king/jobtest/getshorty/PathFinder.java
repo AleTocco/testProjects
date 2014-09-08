@@ -12,10 +12,10 @@ import com.king.jobtest.getshorty.data.RouteTaken;
 public class PathFinder {
 		
 	public String getShortestPath(Dungeon dungeon){
-		ArrayList<RouteTaken> routesToStart;
+		ArrayList<RouteTaken> routesToStart = new ArrayList<RouteTaken>();
 		
-		// we have to find the shortest way to the exit, so we start from the exit coming back to start
-		routesToStart = getLastCorridors(dungeon);
+		// we have to find the shortest way to the exit, I'll start from the exit coming back to start
+		routesToStart = getLastCorridors(dungeon, routesToStart);
 		routesToStart = goPaths(dungeon, routesToStart);
 			
 		return getLessDamage(routesToStart);
@@ -23,8 +23,8 @@ public class PathFinder {
 	}
 
 
-	public ArrayList<RouteTaken> goPaths(Dungeon dungeon, ArrayList<RouteTaken> routesToStart) {
-	
+	private ArrayList<RouteTaken> goPaths(Dungeon dungeon, ArrayList<RouteTaken> routesToStart) {
+		// trace all the possible paths from the exit to the start
 		while(!areAllRoutesCompleted(routesToStart)){
 			ArrayList<RouteTaken> routeListTmp = new ArrayList<RouteTaken>();
 			
@@ -33,14 +33,14 @@ public class PathFinder {
 
 				if(!(route.isPathCompleted() || route.isPathInterrupted())){	
 					
-					ArrayList<Corridor> nextCorridors = getCorridorsByIntersection(dungeon, route.getNextStep()); 
+					ArrayList<Corridor> nextCorridors = getCorridorsByIntersection(dungeon, route.getNextIntersection()); 
 					
 					for (int j = 0; j < nextCorridors.size(); j++) {
 						Corridor cor = nextCorridors.get(j);
 
-						if(!route.alreadyGoneFromHere(cor.getOppositeIntersection(route.getNextStep()))){
+						if(!route.alreadyGoneFromHere(cor.getOppositeIntersection(route.getNextIntersection()))){
 							RouteTaken newRoute = route.cloneRoute();
-							newRoute.doOneStep(cor);
+							newRoute.goToNextIntersection(cor);
 									
 							routeListTmp.add(newRoute);
 						}
@@ -56,10 +56,8 @@ public class PathFinder {
 		return routesToStart;
 	}
 	
-	public ArrayList<RouteTaken> getLastCorridors(Dungeon dungeon) {
+	private ArrayList<RouteTaken> getLastCorridors(Dungeon dungeon, ArrayList<RouteTaken> routesToStart) {
 		ArrayList<Corridor> lastCorridors = getCorridorsByIntersection(dungeon, dungeon.getIntersectionsNum() - 1);
-		
-		ArrayList<RouteTaken> routesToStart = new ArrayList<RouteTaken>();
 		
 		for (Iterator<Corridor> iterator = lastCorridors.iterator(); iterator.hasNext();) {
 			Corridor corridor = (Corridor) iterator.next();
@@ -91,14 +89,14 @@ public class PathFinder {
 	}
 
 	public ArrayList<Corridor> getCorridorsByIntersection(Dungeon dungeon, int intersection){
-		
+		// return the list of all dungeoun's corridors that have the specific intersection
 		ArrayList<Corridor> corridorsWithSelectedIntersection = new ArrayList<Corridor>();
 		Set<Corridor> dungeonCorridors = dungeon.getCorridors();
 		
 		for (Iterator<Corridor> iterator = dungeonCorridors.iterator(); iterator.hasNext();) {
 			Corridor corrTmp = (Corridor) iterator.next();
 			if(corrTmp.getIntersectionA() == intersection ||
-					corrTmp.getIntersectionB() ==intersection){
+					corrTmp.getIntersectionB() == intersection){
 				corridorsWithSelectedIntersection.add(corrTmp);
 			}
 		}
@@ -107,7 +105,8 @@ public class PathFinder {
 		return corridorsWithSelectedIntersection;
 	}
 	
-	public int getOtherIntersection(Corridor corr, int intersection) {
+	private int getOtherIntersection(Corridor corr, int intersection) {
+		// given one intersection, return the opposite intersection of the same corridor (a corridor can have just 2 intersections)
 		int otherIntersection = -1;
 		
 		if(intersection == corr.getIntersectionA()){

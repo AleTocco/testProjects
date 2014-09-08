@@ -4,21 +4,21 @@ import java.util.ArrayList;
 
 public class RouteTaken {
 	
-	private int nextStep;
-	private ArrayList<Integer> stepsDone;
+	private int nextIntersection;
+	private ArrayList<Integer> intersectionsTaken;
 	private float damage;
 	private boolean pathCompleted;
 	private boolean pathInterrupted;
 
-	public RouteTaken(int inputNextStep, int inputPreviousStep, float inputDamage){
-		stepsDone = new ArrayList<Integer>();
+	public RouteTaken(int inputNextIntersection, int inputPreviousIntersection, float inputDamage){
+		intersectionsTaken = new ArrayList<Integer>();
 		
-		nextStep = inputNextStep;
-		stepsDone.add(inputPreviousStep);
+		nextIntersection = inputNextIntersection;
+		intersectionsTaken.add(inputPreviousIntersection);
 		damage = inputDamage;
 		pathInterrupted = false;
 		
-		if(this.nextStep == 0) 
+		if(this.nextIntersection == 0) 
 			setPathCompleted(true);
 		else 
 			pathCompleted = false;
@@ -28,14 +28,26 @@ public class RouteTaken {
 	private RouteTaken(){
 		
 	}
-
-	public int getNextStep() {
-		return nextStep;
+	
+	
+	public RouteTaken cloneRoute(){
+		RouteTaken newRoute = new RouteTaken();
+		newRoute.setNextIntersection(this.nextIntersection);
+		newRoute.setDamage(this.damage);
+		newRoute.setIntersectionsTaken(this.intersectionsTaken);
+		newRoute.setPathCompleted(this.pathCompleted);
+		newRoute.setPathInterrupted(this.pathInterrupted);
+		return newRoute;
+		
 	}
 
-	public void setNextStep(int nextStep) {
-		this.nextStep = nextStep;
-		if(this.nextStep == 0) setPathCompleted(true);
+	public int getNextIntersection() {
+		return nextIntersection;
+	}
+
+	public void setNextIntersection(int nextIntersection) {
+		this.nextIntersection = nextIntersection;
+		if(this.nextIntersection == 0) setPathCompleted(true);
 	}
 
 	public float getDamage() {
@@ -54,8 +66,8 @@ public class RouteTaken {
 		this.pathCompleted = pathCompleted;
 	}
 	
-	public int getLastStepDone(){
-		return ((Integer)stepsDone.get(stepsDone.size()-1)).intValue();
+	public int getLastIntersectionTaken(){
+		return ((Integer)intersectionsTaken.get(intersectionsTaken.size()-1)).intValue();
 	}
 	
 	public boolean isPathInterrupted() {
@@ -66,42 +78,27 @@ public class RouteTaken {
 		this.pathInterrupted = pathInterrupted;
 	}
 	
-	@SuppressWarnings("unused")
-	private ArrayList<Integer> getStepsDone() {
-		return stepsDone;
-	}
-
 	@SuppressWarnings("unchecked")
-	private void setStepsDone(ArrayList<Integer> stepsDone) {
-		this.stepsDone = (ArrayList<Integer>) stepsDone.clone();
+	private void setIntersectionsTaken(ArrayList<Integer> stepsDone) {
+		this.intersectionsTaken = (ArrayList<Integer>) stepsDone.clone();
 	}
 
 	public boolean alreadyGoneFromHere(int intersection) {
-		int index = stepsDone.indexOf(intersection);
+		int index = intersectionsTaken.indexOf(intersection);
 		
 		if(index < 0) return false;
 		else return true;
 	}
+
 	
-	public RouteTaken cloneRoute(){
-		RouteTaken newRoute = new RouteTaken();
-		newRoute.setNextStep(this.nextStep);
-		newRoute.setDamage(this.damage);
-		newRoute.setStepsDone(this.stepsDone);
-		newRoute.setPathCompleted(this.pathCompleted);
-		newRoute.setPathInterrupted(this.pathInterrupted);
-		return newRoute;
-		
-	}
-	
-	public boolean doOneStep(Corridor nextCorridor){
-		int exitIntersection = nextCorridor.getOppositeIntersection(nextStep) ;
+	public boolean goToNextIntersection(Corridor nextCorridor){
+		int exitIntersection = nextCorridor.getOppositeIntersection(nextIntersection) ;
 		if(alreadyGoneFromHere(exitIntersection)) {
 			setPathInterrupted(true);
 			return false;
 		}else{
-				stepsDone.add(nextStep);
-				setNextStep(exitIntersection);
+				intersectionsTaken.add(nextIntersection);
+				setNextIntersection(exitIntersection);
 				setDamage(damage + nextCorridor.getSentry());
 				return true;
 			}	

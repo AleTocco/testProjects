@@ -20,15 +20,15 @@ public class RouteTakenTest {
 		Corridor corD = new Corridor(3, 4, 0.1f);
 		Corridor corE = new Corridor(4, 5, 0.1f);
 		
-		route.doOneStep(corA);
-		assertEquals(2, route.getNextStep());
-		assertEquals(true, route.doOneStep(corB));
-		assertEquals(false, route.doOneStep(corC));
+		route.goToNextIntersection(corA);
+		assertEquals(2, route.getNextIntersection());
+		assertEquals(true, route.goToNextIntersection(corB));
+		assertEquals(false, route.goToNextIntersection(corC));
 		
-		route.doOneStep(corD);
-		route.doOneStep(corE);
+		route.goToNextIntersection(corD);
+		route.goToNextIntersection(corE);
 		
-		assertEquals(4, route.getLastStepDone());
+		assertEquals(4, route.getLastIntersectionTaken());
 		
 	}
 }

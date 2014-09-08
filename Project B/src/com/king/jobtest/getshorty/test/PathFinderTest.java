@@ -77,7 +77,7 @@ public class PathFinderTest {
 		RouteTaken routeA = new RouteTaken(5,4, 0.1f);
 		assertEquals(false, routeA.isPathCompleted());
 		
-		routeA.setNextStep(0);
+		routeA.setNextIntersection(0);
 		assertEquals(true, routeA.isPathCompleted());
 		 
 		RouteTaken routeB = new RouteTaken(0,4, 0.1f);
